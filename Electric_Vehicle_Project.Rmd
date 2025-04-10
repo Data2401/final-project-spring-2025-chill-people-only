@@ -1,32 +1,18 @@
 ---
 title: "DATA 2410 Group Project"
-author: "Thu Nguyen"
+author: "Thu Nguyen and Minh Le"
 date: "2025-04-10"
-output: html_document
+output: 
+  html_document: 
+    highlight: espresso
+    theme: journal
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# Charging Forward: A Data-Driven Look at Electric Vehicles Population (in Washington)
+As the world transitions towards sustainable energy, electric vehicles (EVs) have emerged as a revolutionary force in the automotive industry. But which brands and models are actually driving this shift?
 
-## R Markdown
+### Which are electric vehicles ?
+Electric vehicles are referred to as battery electric vehicles (BEVs), plug-in hybrid electric vehicles (PHEVs), and hybrid electric vehicles (HEVs), which improves vehicle efficiency.
 
-make a change. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
