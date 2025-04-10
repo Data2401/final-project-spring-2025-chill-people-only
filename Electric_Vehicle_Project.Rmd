@@ -14,5 +14,59 @@ As the world transitions towards sustainable energy, electric vehicles (EVs) hav
 ### Which are electric vehicles ?
 Electric vehicles are referred to as battery electric vehicles (BEVs), plug-in hybrid electric vehicles (PHEVs), and hybrid electric vehicles (HEVs), which improves vehicle efficiency.
 
+### Below is the data set provided by Washington State Department of Licensing:
+```{r}
+ev_data <- read.csv("Electric_Vehicle_Population_Data_1.csv", stringsAsFactors = FALSE)
 
+library(DT)
+datatable(ev_data[ , 1:10])
+```
 
+### Distribution of EV Types
+```{r}
+library(dplyr)
+library(ggplot2)
+
+ev_type_counts <- ev_data %>%
+  count(Electric.Vehicle.Type)
+ggplot(ev_type_counts, aes(x = "", y = n, fill = Electric.Vehicle.Type)) +
+  geom_col(width = 1) +
+  coord_polar("y") +
+  labs(title = "Distribution of EV Types") +
+  theme_void() +
+  theme(legend.title = element_blank())
+```
+
+### Model Year vs. Electric Range
+```{r}
+ggplot(ev_data, aes(x = Model.Year, y = Electric.Range)) +
+  geom_point(alpha = 0.5, color = "darkblue") +
+  labs(title = "Model Year vs Electric Range",
+       x = "Model Year",
+       y = "Electric Range (miles)") +
+  theme_minimal()
+```
+
+### What are the top 10 most common EV makes in Washington ?
+```{r}
+ev_data %>%
+  count(Make, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Make, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Most Common EV Makes",
+       x = "Make", y = "Number of Vehicles")
+```
+
+### What are the most common EV models (top 10) in Washington ?
+```{r}
+ev_data %>%
+  count(Model, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Model, n), y = n)) +
+  geom_col(fill = "forestgreen") +
+  coord_flip() +
+  labs(title = "Top 10 Most Common EV Models",
+       x = "Model", y = "Count")
+```
