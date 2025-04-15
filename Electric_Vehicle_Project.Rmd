@@ -50,23 +50,12 @@ Team members: <a href="https://quangnhatm1.github.io/">Minh Le</a> and Thu Nguye
 
 ::: content
 ### Electric Vehicle Adoption in Washington State: A Data-Driven Analysis
+
 As the world transitions towards sustainable energy, electric vehicles (EVs) have emerged as a revolutionary force in the automotive industry. But which brands and models are actually driving this shift? Let take the State of Washington is an example, the Washington State Department of Licensing provides a dataset detailing EV registrations, offering insights into geographic distribution, popular models, and the influence of electric utility providers on adoption rates. This study explores how Washington's EV landscape has evolved, which brands and models dominate the market, and how electric range varies across different vehicle types, ultimately contributing to a broader understanding of the state's transition toward clean energy solutions.
 
 ### Which are electric vehicles ?
+
 Electric vehicles are referred to as battery electric vehicles (BEVs), plug-in hybrid electric vehicles (PHEVs), and hybrid electric vehicles (HEVs), which improves vehicle efficiency.
-
-### Below is the data set provided by Washington State Department of Licensing:
-
-***Link to view/download the dataset: [EV Dataset](https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD)***
-
-```{r}
-ev_data <- read.csv("Electric_Vehicle_Population_Data_1.csv", stringsAsFactors = FALSE)
-
-library(DT)
-datatable(ev_data,options = list(pageLength = 10,
-                         scrollX = TRUE), 
-          rownames = FALSE)
-```
 
 ### Ready to Lauch the Data
 
@@ -86,12 +75,31 @@ library(ggmap)
 library(mapview)
 
 ```
+
+### Below is the data set provided by Washington State Department of Licensing:
+
+***Link to view/download the dataset: [EV Dataset](https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD)***
+
+```{r}
+ev_data <- read_csv("Electric_Vehicle_Population_Data_1.csv")
+
+library(DT)
+datatable(ev_data,options = list(pageLength = 10,
+                         scrollX = TRUE), 
+          rownames = FALSE)
+```
+
+
 ### Our data: What's in it?
-***It includes key attributes such as:***
-# - Location details (County, City, State, Postal Code)
-# - Vehicle specifications (Model Year, Make, Model)
-# - EV classification (Electric Vehicle Type, Electric Range)
-# - Electric utility provider
+#### ***It includes key attributes such as:***
+
+ - Location details (County, City, State, Postal Code)
+
+ - Vehicle specifications (Model Year, Make, Model)
+
+ - EV classification (Electric Vehicle Type, Electric Range)
+
+ - Electric utility provider
 
 ### Explore this data!
 ***To effectively analyze this data, my team has created the following questions could be explored:***
@@ -103,23 +111,18 @@ library(mapview)
 5. **How does EV adoption vary by county? Which counties have the highest concentration of EVs?**  
 6. **What trends can be observed in EV registrations over different model years?**  
 7. **Which cities have the highest number of registered EVs?**  
-8. **How does electric range vary by EV type (Battery Electric Vehicle vs. Plug-in Hybrid Electric Vehicle)?**  
-9. **Is there a correlation between electric utility providers and EV adoption rates?**  
-10. **What postal codes in Washington have the highest density of EV registrations?**  
-11. **Which EV models tend to have the highest electric range?**  
-12. **Are certain EV manufacturers dominant in specific counties or regions?**  
-13. **How does EV adoption compare between urban and rural areas?**  
-14. **Do certain electric utilities serve more EV owners than others?**  
+8. **Is there a correlation between electric utility providers and EV adoption rates?**  
+9. **Which EV models tend to have the highest electric range?**  
+10. **Are certain EV manufacturers dominant in specific counties or regions?**  
+11. **How does EV adoption compare between urban and rural areas?**  
 
 This expanded set of questions will help uncover deeper insights into EV adoption trends and geographic patterns in Washington. Would you guys want to add more questions for me to analyze this beautiful data? 😊
 
-
 ### How are electric vehicle (EV) types distributed across Washington?
 ```{r}
-
 ev_type_counts <- ev_data %>%
-  count(Electric.Vehicle.Type)
-ggplot(ev_type_counts, aes(x = "", y = n, fill = Electric.Vehicle.Type)) +
+  count(`Electric Vehicle Type`)
+ggplot(ev_type_counts, aes(x = "", y = n, fill = `Electric Vehicle Type`)) +
   geom_col(width = 1) +
   coord_polar("y") +
   labs(title = "Distribution of EV Types") +
@@ -129,8 +132,8 @@ ggplot(ev_type_counts, aes(x = "", y = n, fill = Electric.Vehicle.Type)) +
 
 ### What is the relationship between model year and electric range? Does range improve over time?
 ```{r}
-ggplot(ev_data, aes(x = Model.Year, y = Electric.Range)) +
-  geom_point(alpha = 0.5, color = "darkblue") +
+ggplot(ev_data, aes(x = `Model Year`, y = `Electric Range`)) +
+  geom_point(color = "darkblue") +
   labs(title = "Model Year vs Electric Range",
        x = "Model Year",
        y = "Electric Range (miles)") +
@@ -164,13 +167,30 @@ ev_data %>%
 
 ### How does EV adoption vary by county? Which counties have the highest concentration of EVs?
 
-
 ### What trends can be observed in EV registrations over different model years?
+```{r}
+model_year_counts <- ev_data %>%
+  count(`Model Year`) %>%
+  arrange(`Model Year`)
+
+ggplot(model_year_counts, aes(x = `Model Year`, y = n)) +
+  geom_line(color = "orange") +
+  geom_point(color = "dark red") +
+  labs(
+    title = "EV Registrations by Model Year",
+    x = "Model Year",
+    y = " Number of EVs Registered"
+  ) +
+  theme_minimal()
+```
 
 ### Which cities have the highest number of registered EVs?
 
 ### How does electric range vary by EV type (Battery Electric Vehicle vs. Plug-in Hybrid Electric Vehicle)?
 
-###
 
-:::
+:::: centered
+```{=html}
+<h1> -The End-
+```
+::::
