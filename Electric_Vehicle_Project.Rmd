@@ -106,7 +106,6 @@ library(mapview)
 8. **Is there a correlation between electric utility providers and EV adoption rates?**  
 9. **Which EV models tend to have the highest electric range?**  
 10. **Are certain EV manufacturers dominant in specific counties or regions?**  
-11. **How does EV adoption compare between urban and rural areas?**  
  
 
 This expanded set of questions will help uncover deeper insights into EV adoption trends and geographic patterns in Washington. Would you guys want to add more questions for me to analyze this beautiful data? 😊
@@ -168,8 +167,6 @@ county_EV <- ev_data %>% group_by(County) %>% summarize(
   ggplot(county_EV, aes(x = Total_EV,y=County )) +
   geom_bar(stat = "identity", fill = "red") +
   labs(title = "EV Adoption by County", x = "Total EVs", y = "County")
-
-
 ```
 
 ### What trends can be observed in EV registrations over different model years?
@@ -186,9 +183,6 @@ ggplot(model_year_trends, aes(x = Model.Year, y = Total_Registrations)) +
        x = "Model Year",
        y = "Total Registrations") +
   theme_gray()
-
-
-
 ```
 
 ### Which cities have the highest number of registered EVs?
