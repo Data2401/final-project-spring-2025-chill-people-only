@@ -81,12 +81,12 @@ library(ggplot2) # used for data visualization
 library(plotly)
 library(DT)
 library(leaflet)
-library(tidygeocoder)
 library(ggmap)
 library(mapview)
-
+library(tigris)
 ```
 ### Our data: What's in it?
+
 ***It includes key attributes such as:***
 # - Location details (County, City, State, Postal Code)
 # - Vehicle specifications (Model Year, Make, Model)
@@ -94,6 +94,7 @@ library(mapview)
 # - Electric utility provider
 
 ### Explore this data!
+
 ***To effectively analyze this data, my team has created the following questions could be explored:***
 
 1. **How are electric vehicle (EV) types distributed across Washington?**  
@@ -103,10 +104,9 @@ library(mapview)
 5. **How does EV adoption vary by county? Which counties have the highest concentration of EVs?**  
 6. **What trends can be observed in EV registrations over different model years?**  
 7. **Which cities have the highest number of registered EVs?**  
-8. **Is there a correlation between electric utility providers and EV adoption rates?**  
+8. **Are newer EV models becoming more efficient? **  
 9. **Which EV models tend to have the highest electric range?**  
 10. **Are certain EV manufacturers dominant in specific counties or regions?**  
- 
 
 This expanded set of questions will help uncover deeper insights into EV adoption trends and geographic patterns in Washington. Would you guys want to add more questions for me to analyze this beautiful data? 😊
 
@@ -116,12 +116,12 @@ This expanded set of questions will help uncover deeper insights into EV adoptio
 
 ev_type_counts <- ev_data %>%
   count(Electric.Vehicle.Type)
-ggplot(ev_type_counts, aes(x = "", y = n, fill = Electric.Vehicle.Type)) +
-  geom_col(width = 1) +
-  coord_polar("y") +
-  labs(title = "Distribution of EV Types") +
-  theme_void() +
-  theme(legend.title = element_blank())
+
+ggplot(ev_type_counts, aes(x = Electric.Vehicle.Type, y = n, fill = Electric.Vehicle.Type)) +
+  geom_col() +
+  labs(title = "Distribution of EV Types", x = "Electric Vehicle Type", y = "Count") +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 ### What is the relationship between model year and electric range? Does range improve over time?
@@ -164,9 +164,11 @@ ev_data %>%
 county_EV <- ev_data %>% group_by(County) %>% summarize(
   Total_EV = n()) %>% arrange(-Total_EV)
 
-  ggplot(county_EV, aes(x = Total_EV,y=County )) +
+  counties <- ggplot(county_EV, aes(x = Total_EV,y=County )) +
   geom_bar(stat = "identity", fill = "red") +
   labs(title = "EV Adoption by County", x = "Total EVs", y = "County")
+
+ggplotly(counties)
 ```
 
 ### What trends can be observed in EV registrations over different model years?
@@ -176,22 +178,79 @@ model_year_trends <- ev_data %>%
   group_by(Model.Year) %>%
   summarise(Total_Registrations = n()) %>%
   arrange(Model.Year)
-ggplot(model_year_trends, aes(x = Model.Year, y = Total_Registrations)) +
+model_y <- ggplot(model_year_trends, aes(x = Model.Year, y = Total_Registrations)) +
   geom_line(color = "pink", linewidth = 1) +
   geom_point(size = 2) +
   labs(title = "EV Registrations by Model Year",
        x = "Model Year",
        y = "Total Registrations") +
   theme_gray()
+
+ggplotly(model_y)
 ```
 
 ### Which cities have the highest number of registered EVs?
 ```{r}
+city_EV <- ev_data %>%
+  group_by(City) %>%
+  summarise(Total_EV = n()) %>%
+  arrange(-Total_EV) %>% head(5)
 
+city_1<- ggplot(city_EV, aes(x = reorder(City, -Total_EV), y = Total_EV)) +
+  geom_col(fill = "purple") +
+  labs(title = "EV Registrations by City", x = "City", y = "Total EVs")  
+ggplotly(city_1)
 ```
 
-### Is there a correlation between electric utility providers and EV adoption rates?
-```
-###
+### Are newer EV models becoming more efficient? (Model year vs. average range)
 
+```{r}
+ev_efficiency <- ev_data %>%
+  group_by(Model.Year) %>%
+  summarise(Average_Range = mean(Electric.Range, na.rm = TRUE)) %>%
+  arrange(Model.Year)
+
+ ev_e <- ggplot(ev_efficiency, aes(x = Model.Year, y = Average_Range)) +
+  geom_point(color = "blue", size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "EV Range Efficiency Over Model Years",
+       x = "Model Year",
+       y = "Average Electric Range (miles)") 
+ ggplotly(ev_e)
+```
+
+
+### Which EV models tend to have the highest electric range?  
+```{r}
+top_ev_range <- ev_data %>%
+  group_by(Model) %>%
+  summarize(Max_Range = max(Electric.Range, na.rm = TRUE)) %>%
+  arrange(-Max_Range) %>% head(10)
+top_r <- ggplot(top_ev_range, aes(x = reorder(Model, Max_Range), y = Max_Range)) +
+  geom_col(fill = "orange") +
+  labs(title = "Top EV Models by Electric Range",
+       x = "EV Model",
+       y = "Max Electric Range (miles)") +
+  coord_flip()
+ggplotly(top_r)
+```
+
+### Are certain EV manufacturers dominant in specific counties or regions?
+
+```{r}
+ev_by_county <- ev_data %>%
+  group_by(County, Make) %>%
+  summarise(Total_EV = n(),.groups = "drop") %>%
+  arrange(-Total_EV) %>%
+  slice_max(Total_EV, by = County)
+
+ev_county <- ggplot(ev_by_county, aes(x = reorder(County, Total_EV), y = Total_EV, fill = Make)) +
+  geom_col() +
+  labs(title = "Dominant EV Manufacturer by County",
+       x = "County",
+       y = "Total EV Registrations") +
+  theme_minimal() +
+  coord_flip()
+ggplotly(ev_county)
+```
 :::
