@@ -53,7 +53,7 @@ Team members: <a href="https://quangnhatm1.github.io/">Minh Le</a> and Thu Nguye
 As the world transitions towards sustainable energy, electric vehicles (EVs) have emerged as a revolutionary force in the automotive industry. But which brands and models are actually driving this shift? Let take the State of Washington is an example, the Washington State Department of Licensing provides a dataset detailing EV registrations, offering insights into geographic distribution, popular models, and the influence of electric utility providers on adoption rates. This study explores how Washington's EV landscape has evolved, which brands and models dominate the market, and how electric range varies across different vehicle types, ultimately contributing to a broader understanding of the state's transition toward clean energy solutions.
 
 ### Which are electric vehicles ?
-Electric vehicles are referred to as battery electric vehicles (BEVs), plug-in hybrid electric vehicles (PHEVs), and hybrid electric vehicles (HEVs), which improves vehicle efficiency.
+Electric vehicles are referred to as battery electric vehicles (BEVs) and plug-in hybrid electric vehicles (PHEVs), which improves vehicle efficiency.
 
 ### Below is the data set provided by Washington State Department of Licensing:
 
@@ -78,12 +78,13 @@ library(knitr) #for dynamic report generation
 library(kableExtra) # used to construct Complex Table for data
 library(tidyverse)# multiple tidy up data packages here
 library(ggplot2) # used for data visualization
-library(plotly)
+library(plotly) # make interactive graphs
 library(DT)
 library(leaflet)
 library(ggmap)
 library(mapview)
-library(tigris)
+library(crsuggest)
+library(sf)
 ```
 ### Our data: What's in it?
 
@@ -101,7 +102,7 @@ library(tigris)
 2. **What is the relationship between model year and electric range? Does range improve over time?**  
 3. **Which are the top 10 most common EV makes in Washington?**  
 4. **What are the top 10 most common EV models in Washington?**  
-5. **How does EV adoption vary by county? Which counties have the highest concentration of EVs?**  
+5. **How does EV adoption vary by county? How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?**  
 6. **What trends can be observed in EV registrations over different model years?**  
 7. **Which cities have the highest number of registered EVs?**  
 8. **Are newer EV models becoming more efficient? **  
@@ -159,16 +160,35 @@ ev_data %>%
 ```
 
 
-### How does EV adoption vary by county? Which counties have the highest concentration of EVs?
+### How does EV adoption vary by county? How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?
 ```{r}
 county_EV <- ev_data %>% group_by(County) %>% summarize(
   Total_EV = n()) %>% arrange(-Total_EV)
 
-  counties <- ggplot(county_EV, aes(x = Total_EV,y=County )) +
+
+  counties <- ggplot(county_EV, aes(x = reorder(County, Total_EV), y = Total_EV)) +
   geom_bar(stat = "identity", fill = "red") +
-  labs(title = "EV Adoption by County", x = "Total EVs", y = "County")
+  labs(title = "EV Adoption by County",
+       x = "County",
+       y = "Total EVs") +
+  theme_minimal() +
+  coord_flip()
 
 ggplotly(counties)
+
+top_counties <- county_EV %>%
+  top_n(5, Total_EV)
+ev_top_counties <- ev_data %>%
+  filter(County %in% top_counties$County) %>% rename(
+    "Electric Vehicle Type" = Electric.Vehicle.Type)
+
+county_top_types <- ggplot(ev_top_counties, aes(x = County, fill = `Electric Vehicle Type`)) +
+  geom_bar(position = "dodge") +
+  labs(title = "EV Adoption by Type in Top 5 Counties",
+       x = "County",
+       y = "Count of EVs") +
+  theme_gray()
+ggplotly(county_top_types)
 ```
 
 ### What trends can be observed in EV registrations over different model years?
@@ -200,6 +220,11 @@ city_1<- ggplot(city_EV, aes(x = reorder(City, -Total_EV), y = Total_EV)) +
   geom_col(fill = "purple") +
   labs(title = "EV Registrations by City", x = "City", y = "Total EVs")  
 ggplotly(city_1)
+
+
+
+
+
 ```
 
 ### Are newer EV models becoming more efficient? (Model year vs. average range)
