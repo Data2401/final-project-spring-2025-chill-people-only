@@ -232,14 +232,18 @@ city_1<- ggplot(city_EV1, aes(x = City, y = `Total EV`)) +
   labs(title = "EV Registrations by City", x = "City", y = "Total EVs")  
 ggplotly(city_1)
 
+library(usmap)
+states <- us_map(include = "WA")
+
 wa_places <- places(state = "WA", year = 2021, progress = FALSE)
 city_EV <- city_EV %>% 
   mutate(City = as.character(City))
 city_map_data <- wa_places %>% 
   left_join(city_EV, by = c("NAME" = "City")) %>% 
   mutate(`Total EV` = replace_na(`Total EV`, 0))
-ggplot(city_map_data) +
-  geom_sf(aes(fill = `Total EV`), color = "gray30", linewidth = 0.3,alpha=.9) +
+ggplot() +
+  geom_sf(data = city_map_data, aes(fill = `Total EV`), color = "gray30", linewidth = 0.3,alpha=.9) +
+  geom_sf(data = states, fill = NA) + 
   scale_fill_gradientn(
     colors = c("#f0f9e8", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac"),
     na.value = "gray10",       
