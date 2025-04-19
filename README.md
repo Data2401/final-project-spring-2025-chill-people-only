@@ -34,7 +34,7 @@ we examine EV distribution, efficiency trends, manufacturer dominance, and geogr
 1. Thu Nguyen
 2. (Minh Le)[lequangnhatm1@gator.uhd.edu]
 
-📅 ***Last update:*** `r Sys.Date()`
+📅 ***Last update: 4/18/2025*** 
 
 
 
