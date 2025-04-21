@@ -408,7 +408,7 @@ Counties with lower registrations, such as Grant, Kittitas, and Okanogan, indica
 | 🚗 **Manufacturer Dominance** | Tesla leads in EV registrations across multiple counties, with strong presence in urban areas. | Tesla dominates the EV market in Washington, benefiting from brand recognition, wide charging networks, and longer-range models. |
 | 🔎 **EV Type Breakdown** | Battery Electric Vehicles (BEVs) consistently outnumber Plug-in Hybrid Electric Vehicles (PHEVs). | Consumers in Washington prefer fully electric models over hybrids, possibly due to incentives and infrastructure supporting BEVs. |
 
-
+ 
  ***IV. References***
 ---
 The original (unfiltered) database for this project can be downloaded at [https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD](https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD) 
