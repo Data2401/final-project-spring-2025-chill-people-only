@@ -1,12 +1,15 @@
 ---
 title: "DATA 2401 Group Project"
 author: "Thu Nguyen and Minh Le"
-
 output: 
   html_document: 
     highlight: espresso
     theme: journal
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
+
 ```{=html}
 <style>
 .centered {
@@ -30,7 +33,7 @@ body {
 </style>
 ```
 
-:::: centered
+::: centered
 ```{=html}
 <h1>Charging Forward: A Data-Driven Look at Electric Vehicles Population (in the State of Washington)</h1>
 
@@ -46,16 +49,20 @@ Team members: <a href="https://quangnhatm1.github.io/">Minh Le</a> and Thu Nguye
 
 <span style="font-size: 13pt; text-decoration: underline;">Elon Musk stands proudly beside his Tesla at the debut of the company's latest product.</span>
 ```
-::::
+:::
 
 ::: content
-
-# ***I.Introduction***
-
+***I. Introduction***
+---
 ### Electric Vehicle Adoption in Washington State: A Data-Driven Analysis
-As the world transitions towards sustainable energy, electric vehicles (EVs) have emerged as a revolutionary force in the automotive industry. But which brands and models are actually driving this shift? Let take the State of Washington is an example, the Washington State Department of Licensing provides a dataset detailing EV registrations, offering insights into geographic distribution, popular models, and the influence of electric utility providers on adoption rates. This study explores how Washington's EV landscape has evolved, which brands and models dominate the market, and how electric range varies across different vehicle types, ultimately contributing to a broader understanding of the state's transition toward clean energy solutions.
+
+As the world transitions towards sustainable energy, electric vehicles (EVs) have emerged as a revolutionary force in the automotive industry.
+But which brands and models are actually driving this shift?
+Let take the State of Washington is an example, the Washington State Department of Licensing provides a dataset detailing EV registrations, offering insights into geographic distribution, popular models, and the influence of electric utility providers on adoption rates.
+This study explores how Washington's EV landscape has evolved, which brands and models dominate the market, and how electric range varies across different vehicle types, ultimately contributing to a broader understanding of the state's transition toward clean energy solutions.
 
 ### Which are electric vehicles ?
+
 Electric vehicles are referred to as battery electric vehicles (BEVs) and plug-in hybrid electric vehicles (PHEVs), which improves vehicle efficiency.
 
 ### Below is the data set provided by Washington State Department of Licensing:
@@ -89,10 +96,10 @@ library(mapview)
 library(tigris)
 library(sf)
 ```
+
 ### Our data: What's in it?
 
-***It includes key attributes such as:***
-- Location details (County, City, State, Postal Code).
+***It includes key attributes such as:*** - Location details (County, City, State, Postal Code).
 - Vehicle specifications (Model Year, Make, Model).
 - EV classification (Electric Vehicle Type, Electric Range).
 - Electric utility provider/
@@ -101,22 +108,25 @@ library(sf)
 
 ***To effectively analyze this data, my team has created the following questions could be explored:***
 
-1. **How are electric vehicle (EV) types distributed across Washington?**  
-2. **What is the relationship between model year and electric range? Does range improve over time?**  
-3. **Which are the top 10 most common EV makes in Washington?**  
-4. **What are the top 10 most common EV models in Washington?**  
-5. **How does EV adoption vary by county? How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?**  
-6. **What trends can be observed in EV registrations over different model years?**  
-7. **Which cities have the highest number of registered electric vehicles, and how can spatial mapping illustrate all of Washington cities in EV adoption?**  
-8. **Are newer EV models becoming more efficient? **  
-9. **Which EV models and their electric vehicle types tend to have the highest electric range ?**  
-10. **Are certain EV manufacturers dominant in specific counties or regions?**  
+1.  **How are electric vehicle (EV) types distributed across Washington?**\
+2.  **What is the relationship between model year and electric range? Does range improve over time?**\
+3.  **Which are the top 10 most common EV makes in Washington?**\
+4.  **What are the top 10 most common EV models in Washington?**\
+5.  **How does EV adoption vary by county? How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?**\
+6.  **What trends can be observed in EV registrations over different model years?**\
+7.  **Which cities have the highest number of registered electric vehicles, and how can spatial mapping illustrate all of Washington cities in EV adoption?**\
+8.  **Are newer EV models becoming more efficient?** \
+9.  **Which EV models and their electric vehicle types tend to have the highest electric range ?**\
+10. **Are certain EV manufacturers dominant in specific counties or regions?**
 
-This expanded set of questions will help uncover deeper insights into EV adoption trends and geographic patterns in Washington. Would you guys want to add more questions for me to analyze this beautiful data? 😊
+This expanded set of questions will help uncover deeper insights into EV adoption trends and geographic patterns in Washington.
+Would you guys want to add more questions for me to analyze this beautiful data?
+😊
 
-# ***II. Analyzing Dataset***
-
+ ***II. Analyzing Dataset***
+---
 ### How are electric vehicle (EV) types distributed across Washington?
+
 ```{r}
 
 ev_type_counts <- ev_data %>%
@@ -130,6 +140,7 @@ ggplot(ev_type_counts, aes(x = Electric.Vehicle.Type, y = n, fill = Electric.Veh
 ```
 
 ### What is the relationship between model year and electric range? Does range improve over time?
+
 ```{r}
 ggplot(ev_data, aes(x = Model.Year, y = Electric.Range)) +
   geom_point(alpha = 0.5, color = "darkblue") +
@@ -140,6 +151,7 @@ ggplot(ev_data, aes(x = Model.Year, y = Electric.Range)) +
 ```
 
 ### Which are the top 10 most common EV makes in Washington?
+
 ```{r}
 ev_data %>%
   count(Make, sort = TRUE) %>%
@@ -152,6 +164,7 @@ ev_data %>%
 ```
 
 ### What are the top 10 most common EV models in Washington?
+
 ```{r}
 ev_data %>%
   count(Model, sort = TRUE) %>%
@@ -163,8 +176,8 @@ ev_data %>%
        x = "Model", y = "Count")
 ```
 
-
 ### How does EV adoption vary by county? How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?
+
 ```{r}
 county_EV <- ev_data %>% group_by(County) %>% summarize(
   Total_EV = n()) %>% arrange(-Total_EV) %>%  rename(
@@ -198,18 +211,23 @@ county_top_types <- ggplot(ev_top_counties, aes(x = County, fill = `Electric Veh
 ggplotly(county_top_types)
 ```
 
-
 ***<u>Summary conclusion</u>***
 
 ***a. How does EV adoption vary by county?***
 
-EV adoption varies significantly by county, with King County having the highest adoption rate with 8764 EVs, followed by Clark (1212 EVs), Kitsap (676 EVs), Snohomish (498 EVs), Thurston (375 EVs), Yakima (135 EVs), and Cowlitz (123 EVs). The adoption rate decreases progressively from King County to Cowlitz County, indicating that certain regions have stronger adoption trends.
+EV adoption varies significantly by county, with King County having the highest adoption rate with 8764 EVs, followed by Clark (1212 EVs), Kitsap (676 EVs), Snohomish (498 EVs), Thurston (375 EVs), Yakima (135 EVs), and Cowlitz (123 EVs).
+The adoption rate decreases progressively from King County to Cowlitz County, indicating that certain regions have stronger adoption trends.
 
-***b.How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?**
+***b.How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?***
 
- The distribution of electric vehicle types among the top five counties highlights a clear preference for Battery Electric Vehicles (BEVs) over Plug-in Hybrid Electric Vehicles (PHEVs) in all counties.  King County, which has the highest overall adoption, shows a significant presence of BEVs, while PHEVs make up a smaller but notable portion of the total EV count. Clark County has a moderate number of BEVs and fewer PHEVs and reflect a similar trend. In Kitsap, Snohomish, and Thurston counties, both BEV and PHEV counts are lower, but BEVs still maintain a strong presence compared to PHEVs. The overall trend suggests that counties with higher adoption rates tend to favor BEVs.
+The distribution of electric vehicle types among the top five counties highlights a clear preference for Battery Electric Vehicles (BEVs) over Plug-in Hybrid Electric Vehicles (PHEVs) in all counties.
+King County, which has the highest overall adoption, shows a significant presence of BEVs, while PHEVs make up a smaller but notable portion of the total EV count.
+Clark County has a moderate number of BEVs and fewer PHEVs and reflect a similar trend.
+In Kitsap, Snohomish, and Thurston counties, both BEV and PHEV counts are lower, but BEVs still maintain a strong presence compared to PHEVs.
+The overall trend suggests that counties with higher adoption rates tend to favor BEVs.
 
 ### What trends can be observed in EV registrations over different model years?
+
 ```{r}
 
 model_year_trends <- ev_data %>%
@@ -233,7 +251,11 @@ ggplotly(model_y)
 
 ***<u>Summary conclusion</u>***
 
-The graph shows that EV registrations were minimal from 2000 to around 2010, with almost no recorded registrations. Between 2010 and 2015, there was a slight increase, but the numbers remained relatively low. A noticeable upward trend began around 2015, with a significant surge starting in 2018. The peak occurred in 2022, reaching approximately 3,000 registrations. After 2022, there was a sharp decline, with registrations dropping significantly by 2025. 
+The graph shows that EV registrations were minimal from 2000 to around 2010, with almost no recorded registrations.
+Between 2010 and 2015, there was a slight increase, but the numbers remained relatively low.
+A noticeable upward trend began around 2015, with a significant surge starting in 2018.
+The peak occurred in 2022, reaching approximately 3,000 registrations.
+After 2022, there was a sharp decline, with registrations dropping significantly by 2025.
 
 ### Which cities have the highest number of registered electric vehicles, and how can spatial mapping illustrate all of Washington cities in EV adoption?
 
@@ -276,10 +298,12 @@ ggplot() +
 
 ```
 
-
 ***<u>Summary conclusion</u>***
 
-Seattle has the highest number of registered electric vehicles, with approximately 2,500 EVs. Bellevue and Kirkland follow, each with around 1,500 EVs. Vancouver has about 1,000 EVs, and Redmond has the lowest among the five cities shown, with around 500 EVs. The distribution suggests that larger metropolitan areas tend to have higher EV adoption rates.
+Seattle has the highest number of registered electric vehicles, with approximately 2,500 EVs.
+Bellevue and Kirkland follow, each with around 1,500 EVs.
+Vancouver has about 1,000 EVs, and Redmond has the lowest among the five cities shown, with around 500 EVs.
+The distribution suggests that larger metropolitan areas tend to have higher EV adoption rates.
 
 ### Are newer EV models becoming more efficient? (Model year vs. average range)
 
@@ -305,13 +329,18 @@ ev_efficiency <- ev_data %>%
  ggplotly(ev_e)
 ```
 
-
 ***<u>Summary conclusion</u>***
 
-Based on the graph, the electric range of EV models has varied across different model years. From the early 2000s to around 2005, there was a noticeable increase, reaching an average range of approximately 250 miles. However, after this peak, the average range declined before stabilizing in the 2010s with some fluctuations. Between 2015 and 2020, there was a moderate upward trend, but the most recent data suggests a decline again after 2020.
-This trend indicates that while EV models initially improved in range, recent years show a decrease. This could be due to changes in battery design, shifts toward smaller or more affordable EVs, or variations in manufacturer priorities. Without additional data on battery capacity and efficiency, the decline in range does not necessarily mean that EVs are becoming less advanced!
+Based on the graph, the electric range of EV models has varied across different model years.
+From the early 2000s to around 2005, there was a noticeable increase, reaching an average range of approximately 250 miles.
+However, after this peak, the average range declined before stabilizing in the 2010s with some fluctuations.
+Between 2015 and 2020, there was a moderate upward trend, but the most recent data suggests a decline again after 2020.
+This trend indicates that while EV models initially improved in range, recent years show a decrease.
+This could be due to changes in battery design, shifts toward smaller or more affordable EVs, or variations in manufacturer priorities.
+Without additional data on battery capacity and efficiency, the decline in range does not necessarily mean that EVs are becoming less advanced!
 
-### Which EV models and their electric vehicle types tend to have the highest electric range ?  
+### Which EV models and their electric vehicle types tend to have the highest electric range ?
+
 ```{r, message=FALSE, warning=FALSE}
 top_ev_range <- ev_data %>% select(Model,Electric.Range,Electric.Vehicle.Type) %>% 
   group_by(Model,Electric.Vehicle.Type) %>%
@@ -333,7 +362,9 @@ ggplotly(top_r)
 
 ***<u>Summary conclusion</u>***
 
-The EV model with the highest electric range in the dataset is the Tesla Model S, which has a maximum range of 337 miles. Other models with high electric range include the Tesla Model 3, Porsche Macan, Tesla Model X, and Tesla Model Y. All of these vehicles are classified as Battery Electric Vehicles (BEVs), meaning they operate solely on electric power without a gasoline backup. The trend suggests that Tesla models dominate the top rankings in terms of range, with Porsche also appearing among the highest-range EVs. 
+The EV model with the highest electric range in the dataset is the Tesla Model S, which has a maximum range of 337 miles.
+Other models with high electric range include the Tesla Model 3, Porsche Macan, Tesla Model X, and Tesla Model Y. All of these vehicles are classified as Battery Electric Vehicles (BEVs), meaning they operate solely on electric power without a gasoline backup.
+The trend suggests that Tesla models dominate the top rankings in terms of range, with Porsche also appearing among the highest-range EVs.
 
 ### Are certain EV manufacturers dominant in specific counties or regions?
 
@@ -359,10 +390,30 @@ ggplotly(ev_county)
 
 ***<u>Summary conclusion</u>***
 
-The bar chart illustrates the number of Tesla vehicles registered across various counties in Washington. King County has the highest number of Tesla registrations (4074 EVs), far surpassing any other county. The data shows a significant drop in Tesla registrations after King County, with Clark (501 EVs), Snohomish (258 EVs), and Kitsap (234 EVs) Counties following but with noticeably lower numbers.
-This distribution suggests that Tesla vehicles are concentrated primarily in urban and high-population counties like King and Clark. Counties with lower registrations, such as Grant, Kittitas, and Okanogan, indicate a much smaller presence of Tesla EVs compared to the leading counties. 
+The bar chart illustrates the number of Tesla vehicles registered across various counties in Washington.
+King County has the highest number of Tesla registrations (4074 EVs), far surpassing any other county.
+The data shows a significant drop in Tesla registrations after King County, with Clark (501 EVs), Snohomish (258 EVs), and Kitsap (234 EVs) Counties following but with noticeably lower numbers.
+This distribution suggests that Tesla vehicles are concentrated primarily in urban and high-population counties like King and Clark.
+Counties with lower registrations, such as Grant, Kittitas, and Okanogan, indicate a much smaller presence of Tesla EVs compared to the leading counties.
 
-# ***III. Conclusion***
+ ***III. Conclusion***
+---
+***Findings and Conclusions Table***
+
+| **Category** | **Findings** | **Conclusions** |
+|:--|:--|:--|
+| 📊 **EV Registrations Over Time** | EV adoption saw minimal growth before 2010, then a sharp increase from 2015 to 2022, followed by a decline in 2023-2025. | EV adoption surged as technology improved, but recent declines may indicate market saturation, economic factors, or policy shifts. |
+| 🗺️ **Geographic Distribution** | King County leads EV adoption, followed by Clark, Kitsap, Snohomish, and Thurston. | Urban areas with higher population densities show stronger adoption trends, likely due to charging infrastructure and policy support. |
+| ⚡ **EV Efficiency & Range Trends** | Average EV range peaked around 2005, fluctuated in the 2010s, and declined post-2020. | Despite technological advancements, range decline may result from shifts toward affordability, battery optimization, or efficiency prioritization. |
+| 🚗 **Manufacturer Dominance** | Tesla leads in EV registrations across multiple counties, with strong presence in urban areas. | Tesla dominates the EV market in Washington, benefiting from brand recognition, wide charging networks, and longer-range models. |
+| 🔎 **EV Type Breakdown** | Battery Electric Vehicles (BEVs) consistently outnumber Plug-in Hybrid Electric Vehicles (PHEVs). | Consumers in Washington prefer fully electric models over hybrids, possibly due to incentives and infrastructure supporting BEVs. |
 
 
+ ***IV. References***
+---
+The original (unfiltered) database for this project can be downloaded at [https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD](https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD) 
+
+```{=html}
+<p style="font-family: 'Times New Roman', serif; font-size: 14pt; text-align: center;font-weight: bold;">Thank you for listening!</p>
+```
 :::
