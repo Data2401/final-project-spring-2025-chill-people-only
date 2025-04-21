@@ -1,12 +1,12 @@
 ---
 title: "DATA 2401 Group Project"
 author: "Thu Nguyen and Minh Le"
-output: 
-  html_document: 
+output:
+  slidy_presentation:
     highlight: espresso
     theme: journal
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: sentence
 ---
 
@@ -81,7 +81,7 @@ datatable(ev_data,options = list(pageLength = 10,
 ### Ready to Lauch the Data
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 library(dplyr) # used to install tigris package
 library(knitr) #for dynamic report generation
