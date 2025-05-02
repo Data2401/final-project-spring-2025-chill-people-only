@@ -101,10 +101,12 @@ library(sf)
 
 ### Our data: What's in it?
 
-***It includes key attributes such as:*** - Location details (County, City, State, Postal Code).
+***It includes key attributes such as:*** 
+
+- Location details (County, City, State, Postal Code).
 - Vehicle specifications (Model Year, Make, Model).
 - EV classification (Electric Vehicle Type, Electric Range).
-- Electric utility provider/
+- Electric utility provider.
 
 ## Explore this data!
 
