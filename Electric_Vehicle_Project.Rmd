@@ -190,6 +190,7 @@ ev_data %>%
     axis.text.x = element_text(size = 12),
     plot.margin = margin(20, 20, 20, 20)
   )
+
 ```
 
 ## How does EV adoption vary by county? How does the distribution of electric vehicle types vary among the top five counties with the highest EV adoption?
